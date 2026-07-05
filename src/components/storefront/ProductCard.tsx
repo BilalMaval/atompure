@@ -24,6 +24,7 @@ export function ProductCard({ product }: { product: ProductListItem }) {
   const percentOff = discountPercent(product.base_price, product.sale_price);
 
   const variant = product.quick_add_variant;
+  const hasVariant = Boolean(variant);
   const canQuickAdd = Boolean(variant && variant.stock_quantity > 0);
 
   function buildCartItem() {
@@ -114,45 +115,49 @@ export function ProductCard({ product }: { product: ProductListItem }) {
             </svg>
           </span>
 
-          {canQuickAdd && (
+          {hasVariant && (
             <div className="absolute bottom-3 left-3 flex translate-y-2 items-center gap-1 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-              <button
-                type="button"
-                onClick={handleBuyNow}
-                className="flex h-7 items-center gap-1 rounded-full border border-white/60 bg-white/35 px-3 text-[10px] font-semibold text-charcoal-900 shadow-md backdrop-blur-md transition-colors hover:bg-white/50"
-              >
-                <svg viewBox="0 0 24 24" fill="currentColor" className="h-2.5 w-2.5 flex-shrink-0" aria-hidden>
-                  <path d="M13 2 3 14h7l-1 8 10-12h-7l1-8Z" />
-                </svg>
-                Buy Now
-              </button>
-              <button
-                ref={addBtnRef}
-                type="button"
-                onClick={handleQuickAdd}
-                className={clsx(
-                  "flex h-7 items-center gap-1 rounded-full border px-3 text-[10px] font-semibold shadow-md backdrop-blur-md transition-all duration-200",
-                  justAdded
-                    ? "scale-[1.03] border-sage-400/80 bg-sage-700/90 text-white"
-                    : "border-sage-400/60 bg-sage-700/60 text-white hover:bg-sage-700/75"
-                )}
-              >
-                {justAdded ? (
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="h-2.5 w-2.5 flex-shrink-0" aria-hidden>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                ) : (
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="h-2.5 w-2.5 flex-shrink-0" aria-hidden>
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M6 8h12l-1 12.5a1.5 1.5 0 0 1-1.5 1.5h-7a1.5 1.5 0 0 1-1.5-1.5L6 8Z"
-                    />
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 8V6a3 3 0 0 1 6 0v2" />
-                  </svg>
-                )}
-                {justAdded ? "Added" : "Add to Bag"}
-              </button>
+              {canQuickAdd ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={handleBuyNow}
+                    className="flex h-7 items-center gap-1 rounded-full border border-white/60 bg-white/35 px-3 text-[10px] font-semibold text-charcoal-900 shadow-md backdrop-blur-md transition-colors hover:bg-white/50"
+                  >
+                    <svg viewBox="0 0 24 24" fill="currentColor" className="h-2.5 w-2.5 flex-shrink-0" aria-hidden>
+                      <path d="M13 2 3 14h7l-1 8 10-12h-7l1-8Z" />
+                    </svg>
+                    Buy Now
+                  </button>
+                  <button
+                    ref={addBtnRef}
+                    type="button"
+                    onClick={handleQuickAdd}
+                    className={clsx(
+                      "flex h-7 items-center gap-1 rounded-full border px-3 text-[10px] font-semibold shadow-md backdrop-blur-md transition-all duration-200",
+                      justAdded
+                        ? "scale-[1.03] border-sage-400/80 bg-sage-700/90 text-white"
+                        : "border-sage-400/60 bg-sage-700/60 text-white hover:bg-sage-700/75"
+                    )}
+                  >
+                    {justAdded ? (
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="h-2.5 w-2.5 flex-shrink-0" aria-hidden>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    ) : (
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="h-2.5 w-2.5 flex-shrink-0" aria-hidden>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 8h12l-1 12.5a1.5 1.5 0 0 1-1.5 1.5h-7a1.5 1.5 0 0 1-1.5-1.5L6 8Z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 8V6a3 3 0 0 1 6 0v2" />
+                      </svg>
+                    )}
+                    {justAdded ? "Added" : "Add to Bag"}
+                  </button>
+                </>
+              ) : (
+                <span className="flex h-7 items-center rounded-full border border-white/40 bg-black/30 px-3 text-[10px] font-semibold text-white/80 shadow-md backdrop-blur-md">
+                  Out of Stock
+                </span>
+              )}
             </div>
           )}
         </div>

@@ -145,7 +145,11 @@ export function pickDefaultVariant(
   variants: { id: string; name: string; price: number; stock_quantity: number; is_default_variant?: boolean }[] | null
 ): { id: string; name: string; price: number; stock_quantity: number } | null {
   if (!variants || variants.length === 0) return null;
-  const chosen = variants.find((v) => v.is_default_variant) ?? variants[0];
+  const preferred = variants.find((v) => v.is_default_variant);
+  // Prefer the flagged default if it has stock, otherwise fall back to first in-stock variant, then first overall
+  const chosen = (preferred && preferred.stock_quantity > 0)
+    ? preferred
+    : (variants.find((v) => v.stock_quantity > 0) ?? preferred ?? variants[0]);
   return { id: chosen.id, name: chosen.name, price: chosen.price, stock_quantity: chosen.stock_quantity };
 }
 
