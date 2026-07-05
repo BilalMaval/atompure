@@ -36,7 +36,12 @@ interface CartContextValue {
   freeDeliveryThreshold: number;
   shippingCost: number;
   originalShippingCost: number;
+  thresholdDiscount: number;
   isShippingDiscounted: boolean;
+  isGloballyFree: boolean;
+  isExplicitlyFree: boolean;
+  explicitlyFreeCount: number;
+  thresholdFreeCount: number;
   isDrawerOpen: boolean;
   openDrawer: () => void;
   closeDrawer: () => void;
@@ -133,14 +138,22 @@ export function CartProvider({
 
   // Uses the same shared logic as the server checkout action, so what's
   // shown here always matches what the customer is actually charged.
-  const { shippingCost, originalShippingCost, isDiscounted: isShippingDiscounted, isExplicitlyFree } = useMemo(
+  const {
+    shippingCost,
+    originalShippingCost,
+    thresholdDiscount,
+    isDiscounted: isShippingDiscounted,
+    isGloballyFree,
+    isExplicitlyFree,
+    explicitlyFreeCount,
+    thresholdFreeCount,
+  } = useMemo(
     () => resolveShipping(items, subtotal, globalFreeShippingThreshold, flatShippingRate),
     [items, subtotal, globalFreeShippingThreshold, flatShippingRate]
   );
 
-  // Only show "Free Delivery" when explicitly toggled on a product or when the
-  // threshold discount kicks in — not when the flat rate just happens to be 0.
-  const hasFreeDelivery = isExplicitlyFree || isShippingDiscounted;
+  // Free delivery banner shows when globally free, threshold met, or any item is explicitly free
+  const hasFreeDelivery = isGloballyFree || isShippingDiscounted || isExplicitlyFree;
 
   return (
     <CartContext.Provider
@@ -156,7 +169,12 @@ export function CartProvider({
         freeDeliveryThreshold,
         shippingCost,
         originalShippingCost,
+        thresholdDiscount,
         isShippingDiscounted,
+        isGloballyFree,
+        isExplicitlyFree,
+        explicitlyFreeCount,
+        thresholdFreeCount,
         isDrawerOpen,
         openDrawer: () => setIsDrawerOpen(true),
         closeDrawer: () => setIsDrawerOpen(false),

@@ -19,7 +19,12 @@ export function CartDrawer() {
     freeDeliveryThreshold,
     shippingCost,
     originalShippingCost,
+    thresholdDiscount,
     isShippingDiscounted,
+    isGloballyFree,
+    isExplicitlyFree,
+    explicitlyFreeCount,
+    thresholdFreeCount,
   } = useCart();
 
   const remainingForFreeShipping = hasFreeDelivery
@@ -61,34 +66,42 @@ export function CartDrawer() {
           </button>
         </div>
 
+        {/* Free shipping progress bar */}
         <div className="border-b border-beige-200 px-6 py-4">
           {items.length === 0 ? (
-            <Text className="text-sm">Add products for free shipping.</Text>
+            <Text className="text-sm text-charcoal-500">
+              Add products to your bag.
+            </Text>
+          ) : isGloballyFree ? (
+            <Text className="text-sm font-medium text-sage-700">
+              🎉 You&apos;ve unlocked free shipping on your entire order!
+            </Text>
           ) : remainingForFreeShipping > 0 ? (
-            <Text className="text-sm">
-              Add {formatPrice(remainingForFreeShipping)} more for free shipping.
+            <Text className="text-sm text-charcoal-600">
+              Add <span className="font-semibold text-charcoal-900">{formatPrice(remainingForFreeShipping)}</span> more to unlock free shipping.
             </Text>
           ) : (
-            <Text className="text-sm text-sage-700">
-              You&apos;ve unlocked free shipping!
+            <Text className="text-sm font-medium text-sage-700">
+              ✓ Free shipping unlocked!
             </Text>
           )}
-          <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-beige-100">
+          <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-beige-200">
             <div
-              className="h-full bg-sage-600 transition-all"
+              className="h-full bg-sage-600 transition-all duration-500"
               style={{ width: `${progress}%` }}
             />
           </div>
         </div>
 
+        {/* Items */}
         <div className="flex-1 overflow-y-auto p-6">
           {items.length === 0 ? (
-            <Text>Your bag is empty.</Text>
+            <Text className="text-charcoal-500">Your bag is empty.</Text>
           ) : (
             <ul className="flex flex-col gap-4">
               {items.map((item) => (
                 <li key={item.variantId} className="flex gap-4">
-                  <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-beige-100">
+                  <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-xl bg-beige-100">
                     {item.imageUrl && (
                       <Image
                         src={item.imageUrl}
@@ -100,39 +113,40 @@ export function CartDrawer() {
                     )}
                   </div>
                   <div className="flex flex-1 flex-col gap-1">
-                    <Text className="font-medium text-charcoal-800">
+                    <Text className="font-medium text-charcoal-800 leading-snug">
                       {item.productName}
                     </Text>
-                    <Text className="text-xs">{item.variantName}</Text>
-                    <div className="flex items-center gap-2">
+                    <Text className="text-xs text-charcoal-500">{item.variantName}</Text>
+                    {item.freeHomeDelivery && (
+                      <span className="w-fit rounded-full bg-sage-50 px-2 py-0.5 text-[10px] font-semibold text-sage-700">
+                        Free Delivery
+                      </span>
+                    )}
+                    <div className="mt-1 flex items-center gap-2">
                       <button
                         aria-label="Decrease quantity"
-                        onClick={() =>
-                          updateQuantity(item.variantId, item.quantity - 1)
-                        }
-                        className="h-7 w-7 rounded-full border border-beige-300 text-sm"
+                        onClick={() => updateQuantity(item.variantId, item.quantity - 1)}
+                        className="h-7 w-7 rounded-full border border-beige-300 text-sm hover:border-sage-400"
                       >
-                        -
+                        −
                       </button>
-                      <span className="text-sm">{item.quantity}</span>
+                      <span className="w-5 text-center text-sm">{item.quantity}</span>
                       <button
                         aria-label="Increase quantity"
-                        onClick={() =>
-                          updateQuantity(item.variantId, item.quantity + 1)
-                        }
-                        className="h-7 w-7 rounded-full border border-beige-300 text-sm"
+                        onClick={() => updateQuantity(item.variantId, item.quantity + 1)}
+                        className="h-7 w-7 rounded-full border border-beige-300 text-sm hover:border-sage-400"
                       >
                         +
                       </button>
                     </div>
                   </div>
                   <div className="flex flex-col items-end justify-between">
-                    <Text className="font-medium">
+                    <Text className="font-medium text-charcoal-800">
                       {formatPrice(item.price * item.quantity)}
                     </Text>
                     <button
                       onClick={() => removeItem(item.variantId)}
-                      className="text-xs text-charcoal-400 hover:text-charcoal-700"
+                      className="text-xs text-charcoal-400 hover:text-red-500 transition-colors"
                     >
                       Remove
                     </button>
@@ -143,26 +157,63 @@ export function CartDrawer() {
           )}
         </div>
 
+        {/* Order summary */}
         {items.length > 0 && (
-          <div className="border-t border-beige-200 p-6">
-            <div className="mb-1 flex justify-between text-sm">
-              <Text>Subtotal</Text>
-              <Text>{formatPrice(subtotal)}</Text>
+          <div className="border-t border-beige-200 p-6 flex flex-col gap-3">
+            <div className="flex justify-between text-sm">
+              <Text className="text-charcoal-600">Subtotal</Text>
+              <Text className="font-medium text-charcoal-900">{formatPrice(subtotal)}</Text>
             </div>
-            <div className="mb-4 flex justify-between text-sm">
-              <Text>Delivery</Text>
-              {isShippingDiscounted ? (
-                <span className="flex items-center gap-2">
-                  <span className="text-charcoal-400 line-through">{formatPrice(originalShippingCost)}</span>
+
+            {/* Explicitly free delivery items badge */}
+            {isExplicitlyFree && (
+              <div className="flex justify-between text-sm">
+                <span className="flex items-center gap-1.5 text-sage-700">
+                  <svg viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 flex-shrink-0">
+                    <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clipRule="evenodd" />
+                  </svg>
+                  Free Delivery
+                  <span className="text-xs text-sage-600">({explicitlyFreeCount} item{explicitlyFreeCount > 1 ? "s" : ""})</span>
+                </span>
+                <span className="font-medium text-sage-700">Included</span>
+              </div>
+            )}
+
+            {/* Threshold discount line */}
+            {thresholdDiscount > 0 && (
+              <div className="flex justify-between text-sm">
+                <span className="flex items-center gap-1.5 text-sage-700">
+                  <svg viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 flex-shrink-0">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clipRule="evenodd" />
+                  </svg>
+                  Shipping Discount
+                  <span className="text-xs text-sage-600">({thresholdFreeCount} item{thresholdFreeCount > 1 ? "s" : ""} unlocked)</span>
+                </span>
+                <span className="font-medium text-sage-700">−{formatPrice(thresholdDiscount)}</span>
+              </div>
+            )}
+
+            {/* Delivery charge */}
+            <div className="flex justify-between text-sm">
+              <Text className="text-charcoal-600">Delivery</Text>
+              {isGloballyFree ? (
+                <span className="flex items-center gap-1.5">
+                  <span className="text-xs text-charcoal-400 line-through">{formatPrice(originalShippingCost)}</span>
                   <span className="font-medium text-sage-700">Free</span>
                 </span>
+              ) : isShippingDiscounted && originalShippingCost > shippingCost ? (
+                <span className="flex items-center gap-1.5">
+                  <span className="text-xs text-charcoal-400 line-through">{formatPrice(originalShippingCost)}</span>
+                  <span className="font-medium text-charcoal-900">{shippingCost === 0 ? "Free" : formatPrice(shippingCost)}</span>
+                </span>
               ) : (
-                <Text className={shippingCost === 0 ? "text-sage-700" : undefined}>
+                <Text className={shippingCost === 0 ? "font-medium text-sage-700" : "font-medium text-charcoal-900"}>
                   {shippingCost === 0 ? "Free" : formatPrice(shippingCost)}
                 </Text>
               )}
             </div>
-            <Link href="/cart" onClick={closeDrawer}>
+
+            <Link href="/cart" onClick={closeDrawer} className="mt-1">
               <Button className="w-full" size="lg">
                 View Bag
               </Button>
