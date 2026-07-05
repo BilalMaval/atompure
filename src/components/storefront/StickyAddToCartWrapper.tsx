@@ -20,7 +20,11 @@ export function StickyAddToCartWrapper({
   const groups = useMemo(() => product.variation_groups ?? [], [product.variation_groups]);
   const usesGroups = groups.length > 0;
 
-  const [legacyVariantId, setLegacyVariantId] = useState(variants[0]?.id ?? "");
+  const firstInStock = useMemo(
+    () => variants.find((v) => v.stock_quantity > 0) ?? variants[0],
+    [variants]
+  );
+  const [legacyVariantId, setLegacyVariantId] = useState(firstInStock?.id ?? "");
   const [selection, setSelection] = useState<Record<string, string>>(() =>
     Object.fromEntries(groups.map((g) => [g.id, g.values[0]?.id ?? ""]))
   );
@@ -47,6 +51,14 @@ export function StickyAddToCartWrapper({
 
   const variantId = matchedVariant?.id ?? "";
   const noMatchingCombination = usesGroups && !matchedVariant;
+
+  // True when we skipped the first variant (out of stock) and landed on another
+  const autoSkippedToVariant =
+    !usesGroups &&
+    firstInStock &&
+    variants[0] &&
+    firstInStock.id !== variants[0].id &&
+    matchedVariant?.id === firstInStock.id;
 
   useEffect(() => {
     onVariantImageChange?.(matchedVariant?.image_url ?? null);
@@ -75,6 +87,11 @@ export function StickyAddToCartWrapper({
         <Text className="text-2xl font-medium text-charcoal-900">{formatPrice(currentPrice)}</Text>
       )}
 
+      {autoSkippedToVariant && (
+        <p className="rounded-md bg-amber-50 px-3 py-2 text-xs text-amber-700 border border-amber-200">
+          <strong>{variants[0]!.name}</strong> is out of stock. Showing <strong>{firstInStock!.name}</strong> instead.
+        </p>
+      )}
       <AddToCartForm
         product={product}
         variantId={variantId}
