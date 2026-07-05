@@ -16,7 +16,8 @@ export default function CartPage() {
     removeItem,
     subtotal,
     hasFreeDelivery,
-    freeDeliveryThreshold,
+    freeDeliveryProgress,
+    freeDeliveryRemaining,
     shippingCost,
     originalShippingCost,
     thresholdDiscount,
@@ -27,15 +28,8 @@ export default function CartPage() {
     thresholdFreeCount,
   } = useCart();
 
-  const remainingForFreeShipping = hasFreeDelivery
-    ? 0
-    : Math.max(0, freeDeliveryThreshold - subtotal);
-  const progress =
-    items.length === 0
-      ? 0
-      : hasFreeDelivery
-        ? 100
-        : Math.min(100, (subtotal / freeDeliveryThreshold) * 100);
+  const progress = hasFreeDelivery ? 100 : freeDeliveryProgress;
+  const remainingForFreeShipping = hasFreeDelivery ? 0 : freeDeliveryRemaining;
 
   return (
     <Container className="py-16">
