@@ -15,7 +15,6 @@ export function CartDrawer() {
     updateQuantity,
     removeItem,
     subtotal,
-    hasFreeDelivery,
     freeDeliveryProgress,
     freeDeliveryRemaining,
     shippingCost,
