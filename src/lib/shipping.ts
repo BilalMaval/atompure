@@ -23,6 +23,9 @@ export interface ShippingResolution {
   // reached — lets the UI show "was Rs X, now free" instead of just "Free".
   originalShippingCost: number;
   isDiscounted: boolean;
+  // True only when an item has the explicit "free home delivery" toggle on —
+  // distinguishes intentional free delivery from a flat rate that happens to be 0.
+  isExplicitlyFree: boolean;
 }
 
 export function resolveShipping(
@@ -51,10 +54,12 @@ export function resolveShipping(
 
   const shippingCost = Math.max(...perItem.map((p) => p.resolved));
   const originalShippingCost = Math.max(...perItem.map((p) => p.original));
+  const isExplicitlyFree = items.some((item) => item.freeHomeDelivery);
 
   return {
     shippingCost,
     originalShippingCost,
     isDiscounted: shippingCost === 0 && originalShippingCost > 0,
+    isExplicitlyFree,
   };
 }

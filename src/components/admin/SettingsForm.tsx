@@ -86,6 +86,7 @@ export function SettingsForm({ initialValues }: { initialValues: StoreSettingsIn
         </Text>
       </div>
       <div>
+        <label className="mb-1 block text-sm font-medium text-charcoal-700">Tax Rate</label>
         <Input
           placeholder="Tax rate (%)"
           type="number"

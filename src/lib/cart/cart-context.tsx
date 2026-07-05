@@ -133,12 +133,14 @@ export function CartProvider({
 
   // Uses the same shared logic as the server checkout action, so what's
   // shown here always matches what the customer is actually charged.
-  const { shippingCost, originalShippingCost, isDiscounted: isShippingDiscounted } = useMemo(
+  const { shippingCost, originalShippingCost, isDiscounted: isShippingDiscounted, isExplicitlyFree } = useMemo(
     () => resolveShipping(items, subtotal, globalFreeShippingThreshold, flatShippingRate),
     [items, subtotal, globalFreeShippingThreshold, flatShippingRate]
   );
 
-  const hasFreeDelivery = shippingCost === 0;
+  // Only show "Free Delivery" when explicitly toggled on a product or when the
+  // threshold discount kicks in — not when the flat rate just happens to be 0.
+  const hasFreeDelivery = isExplicitlyFree || isShippingDiscounted;
 
   return (
     <CartContext.Provider
