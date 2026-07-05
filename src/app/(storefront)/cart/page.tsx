@@ -15,6 +15,7 @@ export default function CartPage() {
     updateQuantity,
     removeItem,
     subtotal,
+    hasFreeDelivery,
     freeDeliveryProgress,
     freeDeliveryRemaining,
     shippingCost,
@@ -27,29 +28,34 @@ export default function CartPage() {
     thresholdFreeCount,
   } = useCart();
 
-  const globalProgress = isGloballyFree ? 100 : freeDeliveryProgress;
-  const globalRemaining = isGloballyFree ? 0 : freeDeliveryRemaining;
+  const progress = hasFreeDelivery ? 100 : freeDeliveryProgress;
+  const remainingForFreeShipping = hasFreeDelivery ? 0 : freeDeliveryRemaining;
 
   return (
     <Container className="py-16">
       <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Bag" }]} />
       <Heading level={1} className="mb-8">Your Bag</Heading>
 
-      {/* Global free shipping progress */}
+      {/* Free shipping progress */}
       <div className="mb-8 rounded-2xl border border-beige-200 bg-cream-100 px-5 py-4">
         {items.length === 0 ? (
           <Text className="text-sm text-charcoal-500">Add products to your bag.</Text>
         ) : isGloballyFree ? (
-          <Text className="text-sm font-medium text-sage-700">🎉 Free shipping on your entire order!</Text>
-        ) : globalRemaining > 0 ? (
+          <Text className="text-sm font-medium text-sage-700">
+            🎉 You&apos;ve unlocked free shipping on your entire order!
+          </Text>
+        ) : remainingForFreeShipping > 0 ? (
           <Text className="text-sm text-charcoal-600">
-            Add <span className="font-semibold text-charcoal-900">{formatPrice(globalRemaining)}</span> more for free shipping on entire order.
+            Add <span className="font-semibold text-charcoal-900">{formatPrice(remainingForFreeShipping)}</span> more to unlock free shipping.
           </Text>
         ) : (
           <Text className="text-sm font-medium text-sage-700">✓ Free shipping unlocked!</Text>
         )}
         <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-beige-200">
-          <div className="h-full bg-sage-600 transition-all duration-500" style={{ width: `${globalProgress}%` }} />
+          <div
+            className="h-full bg-sage-600 transition-all duration-500"
+            style={{ width: `${progress}%` }}
+          />
         </div>
       </div>
 
@@ -84,34 +90,11 @@ export default function CartPage() {
                     {item.productName}
                   </Link>
                   <Text className="text-sm text-charcoal-500">{item.variantName}</Text>
-                  {item.freeHomeDelivery ? (
+                  {item.freeHomeDelivery && (
                     <span className="mt-0.5 w-fit rounded-full bg-sage-50 px-2.5 py-0.5 text-[11px] font-semibold text-sage-700">
                       ✓ Free Delivery
                     </span>
-                  ) : item.freeDeliveryMinPrice != null && item.freeDeliveryMinPrice > 0 && !isGloballyFree ? (() => {
-                    const itemSpent = item.price * item.quantity;
-                    const threshold = item.freeDeliveryMinPrice!;
-                    const unlocked = itemSpent >= threshold;
-                    const remaining = Math.max(0, threshold - itemSpent);
-                    const pct = Math.min(100, (itemSpent / threshold) * 100);
-                    return (
-                      <div className="mt-1.5 w-full max-w-xs">
-                        {unlocked ? (
-                          <p className="text-xs font-semibold text-sage-700">✓ Free delivery on this item!</p>
-                        ) : (
-                          <p className="text-xs text-charcoal-500">
-                            Add <span className="font-semibold text-charcoal-800">{formatPrice(remaining)}</span> more of this item for free delivery
-                          </p>
-                        )}
-                        <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-beige-200">
-                          <div
-                            className={`h-full transition-all duration-500 ${unlocked ? "bg-sage-500" : "bg-sage-400"}`}
-                            style={{ width: `${pct}%` }}
-                          />
-                        </div>
-                      </div>
-                    );
-                  })() : null}
+                  )}
                   <div className="mt-2 flex items-center gap-2">
                     <button
                       aria-label="Decrease quantity"
