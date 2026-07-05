@@ -35,7 +35,7 @@ export function resolveShipping(
   flatShippingRate: number
 ): ShippingResolution {
   if (items.length === 0) {
-    return { shippingCost: 0, originalShippingCost: 0, isDiscounted: false };
+    return { shippingCost: 0, originalShippingCost: 0, isDiscounted: false, isExplicitlyFree: false };
   }
 
   const perItem = items.map((item) => {
