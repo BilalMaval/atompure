@@ -122,19 +122,9 @@ export function CartProvider({
     () => items.reduce((sum, i) => sum + i.quantity, 0),
     [items]
   );
-  // A product's own free-delivery threshold (e.g. "free above Rs 1600") is
-  // a better deal for the customer than the generic store-wide threshold
-  // (e.g. Rs 2500) — show progress toward whichever is lower so "add X
-  // more" reflects the threshold that's actually achievable, not a number
-  // that ignores the product-specific offer entirely.
-  const freeDeliveryThreshold = useMemo(() => {
-    const productThresholds = items
-      .map((i) => i.freeDeliveryMinPrice)
-      .filter((v): v is number => v != null && v > 0);
-    return productThresholds.length
-      ? Math.min(globalFreeShippingThreshold, ...productThresholds)
-      : globalFreeShippingThreshold;
-  }, [items, globalFreeShippingThreshold]);
+  // Progress bar tracks toward the global threshold only — product-specific
+  // thresholds are per-item and tracked by the item's own spend, not cart total.
+  const freeDeliveryThreshold = globalFreeShippingThreshold;
 
   // Uses the same shared logic as the server checkout action, so what's
   // shown here always matches what the customer is actually charged.
@@ -148,7 +138,17 @@ export function CartProvider({
     explicitlyFreeCount,
     thresholdFreeCount,
   } = useMemo(
-    () => resolveShipping(items, subtotal, globalFreeShippingThreshold, flatShippingRate),
+    () => resolveShipping(
+      items.map((i) => ({
+        freeHomeDelivery: i.freeHomeDelivery,
+        freeDeliveryMinPrice: i.freeDeliveryMinPrice,
+        deliveryCharge: i.deliveryCharge,
+        itemSubtotal: i.price * i.quantity,
+      })),
+      subtotal,
+      globalFreeShippingThreshold,
+      flatShippingRate
+    ),
     [items, subtotal, globalFreeShippingThreshold, flatShippingRate]
   );
 

@@ -109,6 +109,7 @@ export async function createOrder(
     deliveryCharge: number | null;
     freeDeliveryMinPrice: number | null;
     freeHomeDelivery: boolean;
+    itemSubtotal: number;
   }[] = [];
 
   for (const item of items) {
@@ -135,6 +136,7 @@ export async function createOrder(
       deliveryCharge: variant.product?.delivery_charge ?? null,
       freeDeliveryMinPrice: variant.product?.free_delivery_min_price ?? null,
       freeHomeDelivery: variant.product?.free_home_delivery ?? false,
+      itemSubtotal: unitPrice * item.quantity,
     });
   }
 

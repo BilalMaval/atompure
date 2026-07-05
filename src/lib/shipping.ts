@@ -17,6 +17,7 @@ export interface ShippingItemInput {
   freeHomeDelivery: boolean;
   freeDeliveryMinPrice: number | null;
   deliveryCharge: number | null;
+  itemSubtotal: number; // price × quantity for this item only
 }
 
 export interface ShippingResolution {
@@ -83,7 +84,8 @@ export function resolveShipping(
         ? item.freeDeliveryMinPrice
         : null;
 
-    const isThresholdFree = threshold != null && subtotal >= threshold;
+    // Use this item's own subtotal — another product's spend must not count
+    const isThresholdFree = threshold != null && item.itemSubtotal >= threshold;
 
     return { charge, isExplicitlyFree: false, isThresholdFree };
   });
