@@ -21,9 +21,10 @@ interface CheckoutFormProps {
   isLoggedIn: boolean;
   userEmail?: string;
   addresses: Address[];
+  taxRatePercent: number;
 }
 
-export function CheckoutForm({ isLoggedIn, userEmail, addresses }: CheckoutFormProps) {
+export function CheckoutForm({ isLoggedIn, userEmail, addresses, taxRatePercent }: CheckoutFormProps) {
   const {
     items,
     subtotal,
@@ -96,7 +97,9 @@ export function CheckoutForm({ isLoggedIn, userEmail, addresses }: CheckoutFormP
       : Math.min(appliedCoupon.value, subtotal);
   }, [appliedCoupon, subtotal]);
 
-  const estimatedTotal = Math.max(0, subtotal - discountTotal) + shippingCost;
+  const taxableAmount = Math.max(0, subtotal - discountTotal);
+  const taxAmount = Math.round(taxableAmount * taxRatePercent / 100);
+  const estimatedTotal = taxableAmount + shippingCost + taxAmount;
 
   async function onSubmit(values: CheckoutInput) {
     setSubmitError(null);
@@ -318,8 +321,8 @@ export function CheckoutForm({ isLoggedIn, userEmail, addresses }: CheckoutFormP
               )}
             </div>
             <div className="flex justify-between text-charcoal-500">
-              <span>Tax</span>
-              <span>Calculated at order placement</span>
+              <span>Tax{taxRatePercent > 0 ? ` (${taxRatePercent}%)` : ""}</span>
+              <span>{taxRatePercent === 0 ? formatPrice(0) : formatPrice(taxAmount)}</span>
             </div>
             {!hasFreeDelivery && subtotal < freeDeliveryThreshold && (
               <Text className="text-xs">
