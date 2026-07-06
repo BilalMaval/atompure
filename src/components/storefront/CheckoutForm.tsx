@@ -307,7 +307,9 @@ export function CheckoutForm({ isLoggedIn, userEmail, addresses }: CheckoutFormP
               {isShippingDiscounted ? (
                 <span className="flex items-center gap-2">
                   <span className="text-charcoal-400 line-through">{formatPrice(originalShippingCost)}</span>
-                  <span className="text-sage-700">Free</span>
+                  <span className={shippingCost === 0 ? "text-sage-700" : undefined}>
+                    {shippingCost === 0 ? "Free" : formatPrice(shippingCost)}
+                  </span>
                 </span>
               ) : (
                 <span className={shippingCost === 0 ? "text-sage-700" : undefined}>
