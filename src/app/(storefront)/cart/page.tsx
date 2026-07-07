@@ -16,6 +16,7 @@ export default function CartPage() {
     removeItem,
     subtotal,
     hasFreeDelivery,
+    freeDeliveryThreshold,
     freeDeliveryProgress,
     freeDeliveryRemaining,
     shippingCost,
