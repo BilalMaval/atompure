@@ -34,6 +34,7 @@ interface CartContextValue {
   itemCount: number;
   hasFreeDelivery: boolean;
   freeDeliveryThreshold: number;
+  freeDeliveryTrackedVariantId: string | null;
   freeDeliveryProgress: number;
   freeDeliveryRemaining: number;
   shippingCost: number;
@@ -126,10 +127,11 @@ export function CartProvider({
   );
   // Progress bar: find the item closest to unlocking its own threshold.
   // If no item has a specific threshold, fall back to global (cart total).
-  const { freeDeliveryThreshold, freeDeliveryProgress, freeDeliveryRemaining } = useMemo(() => {
+  const { freeDeliveryThreshold, freeDeliveryProgress, freeDeliveryRemaining, freeDeliveryTrackedVariantId } = useMemo(() => {
     const candidates = items
       .filter((i) => !i.freeHomeDelivery && i.freeDeliveryMinPrice != null && i.freeDeliveryMinPrice > 0)
       .map((i) => ({
+        variantId: i.variantId,
         threshold: i.freeDeliveryMinPrice!,
         spent: i.price * i.quantity,
         remaining: Math.max(0, i.freeDeliveryMinPrice! - i.price * i.quantity),
@@ -143,6 +145,7 @@ export function CartProvider({
         freeDeliveryThreshold: nearest.threshold,
         freeDeliveryProgress: Math.min(100, (nearest.spent / nearest.threshold) * 100),
         freeDeliveryRemaining: nearest.remaining,
+        freeDeliveryTrackedVariantId: nearest.variantId,
       };
     }
 
@@ -152,6 +155,7 @@ export function CartProvider({
       freeDeliveryThreshold: globalFreeShippingThreshold,
       freeDeliveryProgress: items.length === 0 ? 0 : Math.min(100, (subtotal / globalFreeShippingThreshold) * 100),
       freeDeliveryRemaining: remaining,
+      freeDeliveryTrackedVariantId: null,
     };
   }, [items, subtotal, globalFreeShippingThreshold]);
 
@@ -196,6 +200,7 @@ export function CartProvider({
         itemCount,
         hasFreeDelivery,
         freeDeliveryThreshold,
+        freeDeliveryTrackedVariantId,
         freeDeliveryProgress,
         freeDeliveryRemaining,
         shippingCost,

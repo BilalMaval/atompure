@@ -16,6 +16,7 @@ export function CartDrawer() {
     removeItem,
     subtotal,
     hasFreeDelivery,
+    freeDeliveryTrackedVariantId,
     freeDeliveryProgress,
     freeDeliveryRemaining,
     shippingCost,
@@ -114,6 +115,11 @@ export function CartDrawer() {
                     {item.freeHomeDelivery && (
                       <span className="w-fit rounded-full bg-sage-50 px-2 py-0.5 text-[10px] font-semibold text-sage-700">
                         Free Delivery
+                      </span>
+                    )}
+                    {freeDeliveryTrackedVariantId === item.variantId && freeDeliveryRemaining > 0 && (
+                      <span className="text-[10px] text-charcoal-500">
+                        Add <span className="font-semibold text-charcoal-700">{formatPrice(freeDeliveryRemaining)}</span> more to unlock free shipping
                       </span>
                     )}
                     <div className="mt-1 flex items-center gap-2">

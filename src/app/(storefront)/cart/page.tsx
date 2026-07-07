@@ -16,6 +16,7 @@ export default function CartPage() {
     removeItem,
     subtotal,
     hasFreeDelivery,
+    freeDeliveryTrackedVariantId,
     freeDeliveryProgress,
     freeDeliveryRemaining,
     shippingCost,
@@ -93,6 +94,11 @@ export default function CartPage() {
                   {item.freeHomeDelivery && (
                     <span className="mt-0.5 w-fit rounded-full bg-sage-50 px-2.5 py-0.5 text-[11px] font-semibold text-sage-700">
                       ✓ Free Delivery
+                    </span>
+                  )}
+                  {freeDeliveryTrackedVariantId === item.variantId && freeDeliveryRemaining > 0 && (
+                    <span className="mt-0.5 text-xs text-charcoal-500">
+                      Add <span className="font-semibold text-charcoal-700">{formatPrice(freeDeliveryRemaining)}</span> more to unlock free shipping
                     </span>
                   )}
                   <div className="mt-2 flex items-center gap-2">
