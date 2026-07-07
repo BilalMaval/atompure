@@ -124,13 +124,36 @@ export function CartProvider({
     () => items.reduce((sum, i) => sum + i.quantity, 0),
     [items]
   );
-  // Progress bar tracks the global threshold only.
-  // Per-product threshold hints are shown inline under each cart item.
-  const freeDeliveryThreshold = globalFreeShippingThreshold;
-  const freeDeliveryProgress = items.length === 0 || globalFreeShippingThreshold <= 0
-    ? 0
-    : Math.min(100, (subtotal / globalFreeShippingThreshold) * 100);
-  const freeDeliveryRemaining = Math.max(0, globalFreeShippingThreshold - subtotal);
+  // Progress bar: find the item closest to unlocking its own threshold.
+  // If no item has a specific threshold, fall back to global (cart total).
+  const { freeDeliveryThreshold, freeDeliveryProgress, freeDeliveryRemaining } = useMemo(() => {
+    const candidates = items
+      .filter((i) => !i.freeHomeDelivery && i.freeDeliveryMinPrice != null && i.freeDeliveryMinPrice > 0)
+      .map((i) => ({
+        threshold: i.freeDeliveryMinPrice!,
+        spent: i.price * i.quantity,
+        remaining: Math.max(0, i.freeDeliveryMinPrice! - i.price * i.quantity),
+      }))
+      .filter((c) => c.remaining > 0); // exclude already-unlocked ones
+
+    if (candidates.length > 0) {
+      // Show the one with the smallest remaining amount (nearest to unlock)
+      const nearest = candidates.reduce((a, b) => a.remaining < b.remaining ? a : b);
+      return {
+        freeDeliveryThreshold: nearest.threshold,
+        freeDeliveryProgress: Math.min(100, (nearest.spent / nearest.threshold) * 100),
+        freeDeliveryRemaining: nearest.remaining,
+      };
+    }
+
+    // Fall back to global threshold vs cart total
+    const remaining = Math.max(0, globalFreeShippingThreshold - subtotal);
+    return {
+      freeDeliveryThreshold: globalFreeShippingThreshold,
+      freeDeliveryProgress: items.length === 0 ? 0 : Math.min(100, (subtotal / globalFreeShippingThreshold) * 100),
+      freeDeliveryRemaining: remaining,
+    };
+  }, [items, subtotal, globalFreeShippingThreshold]);
 
   // Uses the same shared logic as the server checkout action, so what's
   // shown here always matches what the customer is actually charged.

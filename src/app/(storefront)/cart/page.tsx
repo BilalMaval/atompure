@@ -16,7 +16,6 @@ export default function CartPage() {
     removeItem,
     subtotal,
     hasFreeDelivery,
-    freeDeliveryThreshold,
     freeDeliveryProgress,
     freeDeliveryRemaining,
     shippingCost,
@@ -37,28 +36,28 @@ export default function CartPage() {
       <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Bag" }]} />
       <Heading level={1} className="mb-8">Your Bag</Heading>
 
-      {/* Free shipping progress — only shown when a global threshold is configured */}
-      {(isGloballyFree || freeDeliveryThreshold > 0) && (
-        <div className="mb-8 rounded-2xl border border-beige-200 bg-cream-100 px-5 py-4">
-          {isGloballyFree ? (
-            <Text className="text-sm font-medium text-sage-700">
-              🎉 You&apos;ve unlocked free shipping on your entire order!
-            </Text>
-          ) : remainingForFreeShipping > 0 ? (
-            <Text className="text-sm text-charcoal-600">
-              Add <span className="font-semibold text-charcoal-900">{formatPrice(remainingForFreeShipping)}</span> more to unlock free shipping on your whole order.
-            </Text>
-          ) : (
-            <Text className="text-sm font-medium text-sage-700">✓ Free shipping unlocked!</Text>
-          )}
-          <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-beige-200">
-            <div
-              className="h-full bg-sage-600 transition-all duration-500"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
+      {/* Free shipping progress */}
+      <div className="mb-8 rounded-2xl border border-beige-200 bg-cream-100 px-5 py-4">
+        {items.length === 0 ? (
+          <Text className="text-sm text-charcoal-500">Add products to your bag.</Text>
+        ) : isGloballyFree ? (
+          <Text className="text-sm font-medium text-sage-700">
+            🎉 You&apos;ve unlocked free shipping on your entire order!
+          </Text>
+        ) : remainingForFreeShipping > 0 ? (
+          <Text className="text-sm text-charcoal-600">
+            Add <span className="font-semibold text-charcoal-900">{formatPrice(remainingForFreeShipping)}</span> more to unlock free shipping.
+          </Text>
+        ) : (
+          <Text className="text-sm font-medium text-sage-700">✓ Free shipping unlocked!</Text>
+        )}
+        <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-beige-200">
+          <div
+            className="h-full bg-sage-600 transition-all duration-500"
+            style={{ width: `${progress}%` }}
+          />
         </div>
-      )}
+      </div>
 
       {items.length === 0 ? (
         <div className="flex flex-col items-start gap-4">
@@ -91,24 +90,11 @@ export default function CartPage() {
                     {item.productName}
                   </Link>
                   <Text className="text-sm text-charcoal-500">{item.variantName}</Text>
-                  {item.freeHomeDelivery ? (
+                  {item.freeHomeDelivery && (
                     <span className="mt-0.5 w-fit rounded-full bg-sage-50 px-2.5 py-0.5 text-[11px] font-semibold text-sage-700">
                       ✓ Free Delivery
                     </span>
-                  ) : item.freeDeliveryMinPrice != null && item.freeDeliveryMinPrice > 0 ? (
-                    (() => {
-                      const remaining = Math.max(0, item.freeDeliveryMinPrice - item.price * item.quantity);
-                      return remaining > 0 ? (
-                        <span className="mt-0.5 text-xs text-charcoal-500">
-                          Add <span className="font-semibold text-charcoal-700">{formatPrice(remaining)}</span> more to unlock free shipping
-                        </span>
-                      ) : (
-                        <span className="mt-0.5 w-fit rounded-full bg-sage-50 px-2.5 py-0.5 text-[11px] font-semibold text-sage-700">
-                          ✓ Free Shipping Unlocked
-                        </span>
-                      );
-                    })()
-                  ) : null}
+                  )}
                   <div className="mt-2 flex items-center gap-2">
                     <button
                       aria-label="Decrease quantity"
