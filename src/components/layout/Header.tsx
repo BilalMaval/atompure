@@ -62,7 +62,7 @@ export function Header() {
             href="/account"
             aria-label="Account"
             className={clsx(
-              "inline-flex h-10 w-10 items-center justify-center rounded-full transition-all duration-200 hover:scale-110 active:scale-95",
+              "inline-flex h-10 w-10 items-center justify-center rounded-full transition-all duration-200 hover:scale-125 active:scale-95",
               isScrolled ? "text-charcoal-800" : "text-cream-50"
             )}
           >
@@ -82,7 +82,7 @@ export function Header() {
           </Link>
           <CartIcon
             className={clsx(
-              "relative inline-flex h-10 w-10 items-center justify-center rounded-full transition-all duration-200 hover:scale-110 active:scale-95",
+              "relative inline-flex h-10 w-10 items-center justify-center rounded-full transition-all duration-200 hover:scale-125 active:scale-95",
               isScrolled ? "text-charcoal-800" : "text-cream-50"
             )}
           />
