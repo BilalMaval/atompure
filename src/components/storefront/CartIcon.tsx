@@ -7,8 +7,10 @@ import { clsx } from "@/lib/utils";
 export function CartIcon({ className }: { className?: string }) {
   const { itemCount, openDrawer } = useCart();
   const [bump, setBump] = useState(false);
+  const [wiggle, setWiggle] = useState(false);
   const prevCount = useRef(itemCount);
 
+  // Bump scale when an item is added
   useEffect(() => {
     const increased = itemCount > prevCount.current;
     prevCount.current = itemCount;
@@ -17,6 +19,18 @@ export function CartIcon({ className }: { className?: string }) {
     const t = setTimeout(() => setBump(false), 450);
     return () => clearTimeout(t);
   }, [itemCount]);
+
+  // Periodic wiggle reminder while cart has items
+  useEffect(() => {
+    if (itemCount === 0) return;
+    const fire = () => {
+      setWiggle(true);
+      setTimeout(() => setWiggle(false), 650);
+    };
+    fire(); // wiggle once immediately when items appear
+    const interval = setInterval(fire, 4000);
+    return () => clearInterval(interval);
+  }, [itemCount > 0]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <button
@@ -35,7 +49,11 @@ export function CartIcon({ className }: { className?: string }) {
         fill="none"
         stroke="currentColor"
         strokeWidth={1.5}
-        className={clsx("h-[22px] w-[22px] transition-transform duration-300", bump && "scale-125")}
+        className={clsx(
+          "h-[22px] w-[22px] transition-transform duration-300",
+          bump && "scale-125",
+          wiggle && "animate-cart-wiggle"
+        )}
         aria-hidden
       >
         <path
