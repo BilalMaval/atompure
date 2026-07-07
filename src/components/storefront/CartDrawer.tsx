@@ -60,32 +60,30 @@ export function CartDrawer() {
           </button>
         </div>
 
-        {/* Free shipping progress bar */}
-        <div className="border-b border-beige-200 px-6 py-4">
-          {items.length === 0 ? (
-            <Text className="text-sm text-charcoal-500">
-              Add products to your bag.
-            </Text>
-          ) : isGloballyFree ? (
-            <Text className="text-sm font-medium text-sage-700">
-              🎉 You&apos;ve unlocked free shipping on your entire order!
-            </Text>
-          ) : remainingForFreeShipping > 0 ? (
-            <Text className="text-sm text-charcoal-600">
-              Add <span className="font-semibold text-charcoal-900">{formatPrice(remainingForFreeShipping)}</span> more to unlock free shipping.
-            </Text>
-          ) : (
-            <Text className="text-sm font-medium text-sage-700">
-              ✓ Free shipping unlocked!
-            </Text>
-          )}
-          <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-beige-200">
-            <div
-              className="h-full bg-sage-600 transition-all duration-500"
-              style={{ width: `${progress}%` }}
-            />
+        {/* Free shipping progress bar — only shown when a global threshold is configured */}
+        {(isGloballyFree || freeDeliveryThreshold > 0) && (
+          <div className="border-b border-beige-200 px-6 py-4">
+            {isGloballyFree ? (
+              <Text className="text-sm font-medium text-sage-700">
+                🎉 You&apos;ve unlocked free shipping on your entire order!
+              </Text>
+            ) : remainingForFreeShipping > 0 ? (
+              <Text className="text-sm text-charcoal-600">
+                Add <span className="font-semibold text-charcoal-900">{formatPrice(remainingForFreeShipping)}</span> more to unlock free shipping on your whole order.
+              </Text>
+            ) : (
+              <Text className="text-sm font-medium text-sage-700">
+                ✓ Free shipping unlocked!
+              </Text>
+            )}
+            <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-beige-200">
+              <div
+                className="h-full bg-sage-600 transition-all duration-500"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Items */}
         <div className="flex-1 overflow-y-auto p-6">
@@ -111,11 +109,24 @@ export function CartDrawer() {
                       {item.productName}
                     </Text>
                     <Text className="text-xs text-charcoal-500">{item.variantName}</Text>
-                    {item.freeHomeDelivery && (
+                    {item.freeHomeDelivery ? (
                       <span className="w-fit rounded-full bg-sage-50 px-2 py-0.5 text-[10px] font-semibold text-sage-700">
                         Free Delivery
                       </span>
-                    )}
+                    ) : item.freeDeliveryMinPrice != null && item.freeDeliveryMinPrice > 0 ? (
+                      (() => {
+                        const remaining = Math.max(0, item.freeDeliveryMinPrice - item.price * item.quantity);
+                        return remaining > 0 ? (
+                          <span className="text-[10px] text-charcoal-500">
+                            Add <span className="font-semibold text-charcoal-700">{formatPrice(remaining)}</span> more to unlock free shipping
+                          </span>
+                        ) : (
+                          <span className="w-fit rounded-full bg-sage-50 px-2 py-0.5 text-[10px] font-semibold text-sage-700">
+                            ✓ Free Shipping Unlocked
+                          </span>
+                        );
+                      })()
+                    ) : null}
                     <div className="mt-1 flex items-center gap-2">
                       <button
                         aria-label="Decrease quantity"
