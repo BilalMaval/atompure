@@ -63,9 +63,7 @@ export function Header() {
             aria-label="Account"
             className={clsx(
               "inline-flex h-10 w-10 items-center justify-center rounded-full transition-all duration-200 hover:scale-110 active:scale-95",
-              isScrolled
-                ? "text-charcoal-800 hover:bg-beige-100"
-                : "text-cream-50 hover:bg-white/10"
+              isScrolled ? "text-charcoal-800" : "text-cream-50"
             )}
           >
             <svg
@@ -85,9 +83,7 @@ export function Header() {
           <CartIcon
             className={clsx(
               "relative inline-flex h-10 w-10 items-center justify-center rounded-full transition-all duration-200 hover:scale-110 active:scale-95",
-              isScrolled
-                ? "text-charcoal-800 hover:bg-beige-100"
-                : "text-cream-50 hover:bg-white/10"
+              isScrolled ? "text-charcoal-800" : "text-cream-50"
             )}
           />
         </div>

@@ -40,7 +40,7 @@ export function CartIcon({ className }: { className?: string }) {
       aria-label={`Open bag, ${itemCount} item${itemCount === 1 ? "" : "s"}`}
       className={clsx(
         "relative inline-flex h-10 w-10 items-center justify-center rounded-full transition-colors",
-        className ?? "text-charcoal-800 hover:bg-beige-100"
+        className ?? "text-charcoal-800"
       )}
     >
       <svg
