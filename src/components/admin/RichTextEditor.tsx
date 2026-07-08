@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { clsx } from "@/lib/utils";
+import { markdownToHtml, looksLikeHtml } from "@/lib/markdown";
 
 interface ToolbarAction {
   label: string;
@@ -21,67 +22,6 @@ const TOOLBAR_ACTIONS: ToolbarAction[] = [
   { label: "1. List", command: "insertOrderedList" },
 ];
 
-// Lightweight markdown → HTML converter (handles common patterns)
-function markdownToHtml(md: string): string {
-  const lines = md.split("\n");
-  const out: string[] = [];
-  let inUl = false;
-  let inOl = false;
-
-  function closeList() {
-    if (inUl) { out.push("</ul>"); inUl = false; }
-    if (inOl) { out.push("</ol>"); inOl = false; }
-  }
-
-  function inlineFormat(text: string): string {
-    return text
-      .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
-      .replace(/__(.+?)__/g, "<strong>$1</strong>")
-      .replace(/\*(.+?)\*/g, "<em>$1</em>")
-      .replace(/_(.+?)_/g, "<em>$1</em>")
-      .replace(/~~(.+?)~~/g, "<s>$1</s>")
-      .replace(/`(.+?)`/g, "<code>$1</code>")
-      .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2">$1</a>');
-  }
-
-  for (const raw of lines) {
-    const line = raw.trimEnd();
-
-    if (/^### (.+)/.test(line)) {
-      closeList();
-      out.push(`<h3>${inlineFormat(line.replace(/^### /, ""))}</h3>`);
-    } else if (/^## (.+)/.test(line)) {
-      closeList();
-      out.push(`<h2>${inlineFormat(line.replace(/^## /, ""))}</h2>`);
-    } else if (/^# (.+)/.test(line)) {
-      closeList();
-      out.push(`<h1>${inlineFormat(line.replace(/^# /, ""))}</h1>`);
-    } else if (/^[-*] (.+)/.test(line)) {
-      if (!inUl) { if (inOl) { out.push("</ol>"); inOl = false; } out.push("<ul>"); inUl = true; }
-      out.push(`<li>${inlineFormat(line.replace(/^[-*] /, ""))}</li>`);
-    } else if (/^\d+\. (.+)/.test(line)) {
-      if (!inOl) { if (inUl) { out.push("</ul>"); inUl = false; } out.push("<ol>"); inOl = true; }
-      out.push(`<li>${inlineFormat(line.replace(/^\d+\. /, ""))}</li>`);
-    } else if (line === "") {
-      closeList();
-      // blank line = paragraph break (already handled by block structure)
-    } else {
-      closeList();
-      out.push(`<p>${inlineFormat(line)}</p>`);
-    }
-  }
-  closeList();
-  return out.join("\n");
-}
-
-// Detect if a string looks like markdown (has md syntax but no HTML tags)
-function looksLikeMarkdown(text: string): boolean {
-  const hasHtml = /<[a-z][\s\S]*>/i.test(text);
-  if (hasHtml) return false;
-  return /^#{1,3} |^\s*[-*] |\*\*.+\*\*|__[^_]+__|^\d+\. /m.test(text);
-}
-
-// Strip dangerous tags from pasted HTML
 function sanitizeHtml(html: string): string {
   return html
     .replace(/<script[\s\S]*?<\/script>/gi, "")
@@ -89,6 +29,11 @@ function sanitizeHtml(html: string): string {
     .replace(/<style[\s\S]*?<\/style>/gi, "")
     .replace(/\son\w+="[^"]*"/gi, "")
     .replace(/\son\w+='[^']*'/gi, "");
+}
+
+function looksLikeMarkdown(text: string): boolean {
+  if (looksLikeHtml(text)) return false;
+  return /^#{1,3} |^\s*[-*] |\*\*.+\*\*|__[^_]+__|^\d+\. /m.test(text);
 }
 
 export function RichTextEditor({
@@ -106,11 +51,20 @@ export function RichTextEditor({
   const isFirstRender = useRef(true);
 
   useEffect(() => {
-    if (isFirstRender.current && editorRef.current) {
-      editorRef.current.innerHTML = value || "";
-      isFirstRender.current = false;
+    if (!isFirstRender.current || !editorRef.current) return;
+    isFirstRender.current = false;
+
+    if (!value) return;
+
+    // If stored value is plain text or markdown, convert to HTML immediately
+    const html = looksLikeHtml(value) ? value : markdownToHtml(value);
+    editorRef.current.innerHTML = html;
+
+    // Persist the converted HTML so it's saved on next submit
+    if (html !== value) {
+      onChange(html);
     }
-  }, [value]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   function runCommand(action: ToolbarAction) {
     editorRef.current?.focus();
@@ -127,32 +81,28 @@ export function RichTextEditor({
   }
 
   function handlePaste(e: React.ClipboardEvent<HTMLDivElement>) {
-    const clipboardData = e.clipboardData;
-    const htmlData = clipboardData.getData("text/html");
-    const textData = clipboardData.getData("text/plain");
+    const htmlData = e.clipboardData.getData("text/html");
+    const textData = e.clipboardData.getData("text/plain");
 
-    // If clipboard has HTML content, use sanitized HTML
+    // Pasted HTML → sanitize and insert
     if (htmlData && htmlData.trim()) {
       e.preventDefault();
-      const clean = sanitizeHtml(htmlData);
-      document.execCommand("insertHTML", false, clean);
+      document.execCommand("insertHTML", false, sanitizeHtml(htmlData));
       onChange(editorRef.current?.innerHTML ?? "");
       return;
     }
 
-    // If plain text looks like markdown, convert it
+    // Pasted markdown → convert to HTML and insert
     if (textData && looksLikeMarkdown(textData)) {
       e.preventDefault();
-      const html = markdownToHtml(textData);
-      document.execCommand("insertHTML", false, html);
+      document.execCommand("insertHTML", false, markdownToHtml(textData));
       onChange(editorRef.current?.innerHTML ?? "");
     }
-    // Otherwise let the browser handle it naturally (plain text paste)
+    // Plain text → browser handles naturally
   }
 
   return (
     <div className="rounded-lg border border-beige-300 bg-cream-50">
-      {/* Toolbar */}
       <div className="flex flex-wrap gap-1 border-b border-beige-200 p-2">
         {TOOLBAR_ACTIONS.map((action) => (
           <button
@@ -175,7 +125,6 @@ export function RichTextEditor({
           Supports markdown &amp; HTML paste
         </span>
       </div>
-      {/* Editable area */}
       <div
         ref={editorRef}
         contentEditable
@@ -187,7 +136,6 @@ export function RichTextEditor({
           minHeight,
           "p-4 text-sm text-charcoal-800 focus:outline-none",
           "empty:before:text-charcoal-400 empty:before:content-[attr(data-placeholder)]",
-          // Style HTML content rendered inside the editor
           "[&_h2]:mb-2 [&_h2]:mt-4 [&_h2]:text-base [&_h2]:font-semibold",
           "[&_h3]:mb-1 [&_h3]:mt-3 [&_h3]:text-sm [&_h3]:font-semibold",
           "[&_p]:my-2 [&_p]:leading-relaxed",
