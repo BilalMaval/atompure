@@ -19,7 +19,11 @@ export function Accordion({ items }: { items: AccordionItemData[] }) {
           <div key={item.title}>
             <button
               type="button"
-              onClick={() => setOpenIndex(isOpen ? null : index)}
+              onClick={(e) => {
+                // Blur to prevent browser scroll-into-view on focus
+                (e.currentTarget as HTMLButtonElement).blur();
+                setOpenIndex(isOpen ? null : index);
+              }}
               aria-expanded={isOpen}
               className="flex w-full items-center justify-between gap-4 py-4 text-left"
             >
@@ -34,13 +38,16 @@ export function Accordion({ items }: { items: AccordionItemData[] }) {
                 +
               </span>
             </button>
+            {/* CSS grid row animation — no max-height jumping */}
             <div
-              className={clsx(
-                "overflow-hidden transition-all duration-300",
-                isOpen ? "max-h-[1000px] pb-4 opacity-100" : "max-h-0 opacity-0"
-              )}
+              className="grid transition-[grid-template-rows] duration-300 ease-in-out"
+              style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}
             >
-              {item.content}
+              <div className="overflow-hidden">
+                <div className="pb-4">
+                  {item.content}
+                </div>
+              </div>
             </div>
           </div>
         );
