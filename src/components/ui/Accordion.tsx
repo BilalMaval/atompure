@@ -20,8 +20,16 @@ export function Accordion({ items }: { items: AccordionItemData[] }) {
             <button
               type="button"
               onClick={(e) => {
-                // Blur to prevent browser scroll-into-view on focus
-                (e.currentTarget as HTMLButtonElement).blur();
+                const btn = e.currentTarget as HTMLButtonElement;
+                btn.blur();
+                // If opening, instantly snap scroll so this header sits just
+                // below the fixed header before the layout shifts.
+                if (!isOpen) {
+                  const rect = btn.getBoundingClientRect();
+                  const headerH = 56; // h-14
+                  const target = window.scrollY + rect.top - headerH - 12;
+                  window.scrollTo({ top: Math.max(0, target), behavior: "instant" });
+                }
                 setOpenIndex(isOpen ? null : index);
               }}
               aria-expanded={isOpen}
