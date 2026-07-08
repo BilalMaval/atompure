@@ -75,7 +75,7 @@ export function ProductCard({ product }: { product: ProductListItem }) {
                 sizes="(min-width: 1024px) 25vw, 50vw"
                 className={
                   product.hover_image_url
-                    ? "object-cover transition-opacity duration-300 ease-out group-hover:opacity-0"
+                    ? "object-cover transition-opacity duration-150 ease-out group-hover:opacity-0"
                     : "object-cover transition-transform duration-500 ease-out group-hover:scale-110"
                 }
               />
@@ -85,7 +85,8 @@ export function ProductCard({ product }: { product: ProductListItem }) {
                   alt={image.alt_text ?? product.name}
                   fill
                   sizes="(min-width: 1024px) 25vw, 50vw"
-                  className="object-cover opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100"
+                  loading="eager"
+                  className="object-cover opacity-0 transition-opacity duration-150 ease-out group-hover:opacity-100"
                 />
               )}
             </>

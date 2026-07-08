@@ -176,12 +176,13 @@ export function ProductForm({ categories, initialValues, productId }: ProductFor
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <Input placeholder="Name" {...register("name")} />
+          <label className="mb-1 block text-sm font-medium text-charcoal-700">Name</label>
+          <Input {...register("name")} />
           {errors.name && <p className="mt-1 text-xs text-red-600">{errors.name.message}</p>}
         </div>
         <div>
+          <label className="mb-1 block text-sm font-medium text-charcoal-700">Slug</label>
           <Input
-            placeholder="Slug"
             {...register("slug", { onChange: () => (slugTouched.current = true) })}
           />
           {errors.slug && <p className="mt-1 text-xs text-red-600">{errors.slug.message}</p>}
@@ -190,6 +191,7 @@ export function ProductForm({ categories, initialValues, productId }: ProductFor
           </Text>
         </div>
         <div>
+          <label className="mb-1 block text-sm font-medium text-charcoal-700">Category</label>
           <select
             {...register("categoryId")}
             className="h-11 w-full rounded-lg border border-beige-300 bg-cream-50 px-4 text-sm"
@@ -204,13 +206,15 @@ export function ProductForm({ categories, initialValues, productId }: ProductFor
           </select>
         </div>
         <div>
-          <Input placeholder="SKU (auto-generated)" {...register("sku", { onChange: () => { skuTouched.current = true; } })} />
+          <label className="mb-1 block text-sm font-medium text-charcoal-700">SKU</label>
+          <Input {...register("sku", { onChange: () => { skuTouched.current = true; } })} />
           <Text className="mt-1 text-xs text-charcoal-400">
             This product&apos;s own SKU — used directly if you don&apos;t add any variants below.
           </Text>
         </div>
         <div>
-          <Input placeholder="Base price" type="number" step="0.01" {...register("basePrice", { valueAsNumber: true })} />
+          <label className="mb-1 block text-sm font-medium text-charcoal-700">Base Price (PKR)</label>
+          <Input type="number" step="0.01" {...register("basePrice", { valueAsNumber: true })} />
           {errors.basePrice && (
             <p className="mt-1 text-xs text-red-600">{errors.basePrice.message}</p>
           )}
@@ -220,8 +224,8 @@ export function ProductForm({ categories, initialValues, productId }: ProductFor
           </Text>
         </div>
         <div>
+          <label className="mb-1 block text-sm font-medium text-charcoal-700">Stock Quantity</label>
           <Input
-            placeholder="Stock quantity"
             type="number"
             {...register("stockQuantity", { valueAsNumber: true })}
           />
@@ -240,30 +244,31 @@ export function ProductForm({ categories, initialValues, productId }: ProductFor
           </Text>
         </div>
         <div>
-          <Input placeholder="Base option name (e.g. Standard, Regular, 250ml)" {...register("baseVariantName")} />
+          <label className="mb-1 block text-sm font-medium text-charcoal-700">Base Option Name</label>
+          <Input {...register("baseVariantName")} />
           {errors.baseVariantName && (
             <p className="mt-1 text-xs text-red-600">{errors.baseVariantName.message}</p>
           )}
           <Text className="mt-1 text-xs text-charcoal-400">
             What this product&apos;s own price/SKU/stock is called when shown next to any variants
-            you add below.
+            you add below (e.g. Standard, Regular, 250ml).
           </Text>
         </div>
         <div>
+          <label className="mb-1 block text-sm font-medium text-charcoal-700">Variant Option Label</label>
           <Input
-            placeholder="Variant option label (e.g. Size, Color, Weight, Dimensions, Quantity)"
             {...register("variantOptionLabel")}
           />
           {errors.variantOptionLabel && (
             <p className="mt-1 text-xs text-red-600">{errors.variantOptionLabel.message}</p>
           )}
           <Text className="mt-1 text-xs text-charcoal-400">
-            The group title shown above the variant choices on the product page.
+            The group title shown above the variant choices on the product page (e.g. Size, Color, Weight).
           </Text>
         </div>
         <div>
+          <label className="mb-1 block text-sm font-medium text-charcoal-700">Sale Price (PKR, optional)</label>
           <Input
-            placeholder="Sale price (optional)"
             type="number"
             step="0.01"
             {...register("salePrice", {
@@ -325,21 +330,29 @@ export function ProductForm({ categories, initialValues, productId }: ProductFor
         </Text>
       </div>
 
-      <textarea
-        placeholder="Description"
-        {...register("description")}
-        className="min-h-24 rounded-lg border border-beige-300 bg-cream-50 p-4 text-sm"
-      />
-      <textarea
-        placeholder="Benefits"
-        {...register("benefits")}
-        className="min-h-20 rounded-lg border border-beige-300 bg-cream-50 p-4 text-sm"
-      />
-      <textarea
-        placeholder="How to use"
-        {...register("howToUse")}
-        className="min-h-20 rounded-lg border border-beige-300 bg-cream-50 p-4 text-sm"
-      />
+      <div>
+        <label className="mb-1 block text-sm font-medium text-charcoal-700">Description</label>
+        <textarea
+          {...register("description")}
+          className="min-h-40 w-full rounded-lg border border-beige-300 bg-cream-50 p-4 text-sm"
+        />
+      </div>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div>
+          <label className="mb-1 block text-sm font-medium text-charcoal-700">Benefits</label>
+          <textarea
+            {...register("benefits")}
+            className="min-h-36 w-full rounded-lg border border-beige-300 bg-cream-50 p-4 text-sm"
+          />
+        </div>
+        <div>
+          <label className="mb-1 block text-sm font-medium text-charcoal-700">How to Use</label>
+          <textarea
+            {...register("howToUse")}
+            className="min-h-36 w-full rounded-lg border border-beige-300 bg-cream-50 p-4 text-sm"
+          />
+        </div>
+      </div>
 
       <div>
         <Text className="mb-2 text-xs uppercase tracking-wide text-charcoal-500">

@@ -169,13 +169,13 @@ export default async function ProductPage({
               <Accordion
                 items={[
                   ...(product.description
-                    ? [{ title: "Description", content: <Text>{product.description}</Text> }]
+                    ? [{ title: "Description", content: <Text className="whitespace-pre-wrap leading-relaxed">{product.description}</Text> }]
                     : []),
                   ...(product.benefits
-                    ? [{ title: "Benefits", content: <Text>{product.benefits}</Text> }]
+                    ? [{ title: "Benefits", content: <Text className="whitespace-pre-wrap leading-relaxed">{product.benefits}</Text> }]
                     : []),
                   ...(product.how_to_use
-                    ? [{ title: "How to Use", content: <Text>{product.how_to_use}</Text> }]
+                    ? [{ title: "How to Use", content: <Text className="whitespace-pre-wrap leading-relaxed">{product.how_to_use}</Text> }]
                     : []),
                 ]}
               />
