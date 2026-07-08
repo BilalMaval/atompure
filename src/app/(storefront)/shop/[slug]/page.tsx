@@ -169,13 +169,13 @@ export default async function ProductPage({
               <Accordion
                 items={[
                   ...(product.description
-                    ? [{ title: "Description", content: <Text className="whitespace-pre-wrap leading-relaxed">{product.description}</Text> }]
+                    ? [{ title: "Description", content: <div className="text-sm leading-relaxed text-charcoal-700 [&_h2]:mb-2 [&_h2]:mt-4 [&_h2]:font-semibold [&_h3]:mb-1 [&_h3]:mt-3 [&_h3]:font-semibold [&_li]:my-0.5 [&_ol]:my-2 [&_ol]:list-decimal [&_ol]:pl-5 [&_p]:my-2 [&_strong]:font-semibold [&_ul]:my-2 [&_ul]:list-disc [&_ul]:pl-5 [&_a]:text-sage-700 [&_a]:underline" dangerouslySetInnerHTML={{ __html: product.description }} /> }]
                     : []),
                   ...(product.benefits
-                    ? [{ title: "Benefits", content: <Text className="whitespace-pre-wrap leading-relaxed">{product.benefits}</Text> }]
+                    ? [{ title: "Benefits", content: <div className="text-sm leading-relaxed text-charcoal-700 [&_h2]:mb-2 [&_h2]:mt-4 [&_h2]:font-semibold [&_h3]:mb-1 [&_h3]:mt-3 [&_h3]:font-semibold [&_li]:my-0.5 [&_ol]:my-2 [&_ol]:list-decimal [&_ol]:pl-5 [&_p]:my-2 [&_strong]:font-semibold [&_ul]:my-2 [&_ul]:list-disc [&_ul]:pl-5 [&_a]:text-sage-700 [&_a]:underline" dangerouslySetInnerHTML={{ __html: product.benefits }} /> }]
                     : []),
                   ...(product.how_to_use
-                    ? [{ title: "How to Use", content: <Text className="whitespace-pre-wrap leading-relaxed">{product.how_to_use}</Text> }]
+                    ? [{ title: "How to Use", content: <div className="text-sm leading-relaxed text-charcoal-700 [&_h2]:mb-2 [&_h2]:mt-4 [&_h2]:font-semibold [&_h3]:mb-1 [&_h3]:mt-3 [&_h3]:font-semibold [&_li]:my-0.5 [&_ol]:my-2 [&_ol]:list-decimal [&_ol]:pl-5 [&_p]:my-2 [&_strong]:font-semibold [&_ul]:my-2 [&_ul]:list-disc [&_ul]:pl-5 [&_a]:text-sage-700 [&_a]:underline" dangerouslySetInnerHTML={{ __html: product.how_to_use }} /> }]
                     : []),
                 ]}
               />

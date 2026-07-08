@@ -17,6 +17,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { Text } from "@/components/ui/Typography";
+import { RichTextEditor } from "@/components/admin/RichTextEditor";
 
 interface ProductFormProps {
   categories: { id: string; name: string }[];
@@ -332,24 +333,30 @@ export function ProductForm({ categories, initialValues, productId }: ProductFor
 
       <div>
         <label className="mb-1 block text-sm font-medium text-charcoal-700">Description</label>
-        <textarea
-          {...register("description")}
-          className="min-h-40 w-full rounded-lg border border-beige-300 bg-cream-50 p-4 text-sm"
+        <RichTextEditor
+          value={watch("description") ?? ""}
+          onChange={(html) => setValue("description", html, { shouldDirty: true })}
+          placeholder="Product description…"
+          minHeight="min-h-40"
         />
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label className="mb-1 block text-sm font-medium text-charcoal-700">Benefits</label>
-          <textarea
-            {...register("benefits")}
-            className="min-h-36 w-full rounded-lg border border-beige-300 bg-cream-50 p-4 text-sm"
+          <RichTextEditor
+            value={watch("benefits") ?? ""}
+            onChange={(html) => setValue("benefits", html, { shouldDirty: true })}
+            placeholder="Key benefits…"
+            minHeight="min-h-36"
           />
         </div>
         <div>
           <label className="mb-1 block text-sm font-medium text-charcoal-700">How to Use</label>
-          <textarea
-            {...register("howToUse")}
-            className="min-h-36 w-full rounded-lg border border-beige-300 bg-cream-50 p-4 text-sm"
+          <RichTextEditor
+            value={watch("howToUse") ?? ""}
+            onChange={(html) => setValue("howToUse", html, { shouldDirty: true })}
+            placeholder="Usage instructions…"
+            minHeight="min-h-36"
           />
         </div>
       </div>
