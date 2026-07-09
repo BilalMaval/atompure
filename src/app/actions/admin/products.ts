@@ -373,6 +373,24 @@ export async function updateBeforeAfterImage(
   return { success: true };
 }
 
+export async function updateBeforeAfterDisplay(
+  productId: string,
+  height: number,
+  position: string
+): Promise<ActionResult> {
+  await requireAdmin();
+  const supabase = createClient();
+  const { error } = await supabase
+    .from("products")
+    .update({ before_after_image_height: height, before_after_image_position: position })
+    .eq("id", productId);
+
+  if (error) return { success: false, error: error.message };
+  revalidatePath(`/admin/products/${productId}`);
+  revalidatePath(`/shop`);
+  return { success: true };
+}
+
 export async function updateHoverImage(
   productId: string,
   url: string | null

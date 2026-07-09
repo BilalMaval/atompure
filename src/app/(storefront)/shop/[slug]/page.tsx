@@ -186,13 +186,17 @@ export default async function ProductPage({
       </div>
 
       {product.before_after_image_url && (
-        <Reveal className="relative mt-16 h-[420px] w-full overflow-hidden rounded-2xl">
+        <Reveal
+          className="relative mt-16 w-full overflow-hidden rounded-2xl"
+          style={{ height: `${product.before_after_image_height ?? 420}px` }}
+        >
           <Image
             src={product.before_after_image_url}
             alt={`${product.name} before and after results`}
             fill
             sizes="100vw"
             className="object-cover"
+            style={{ objectPosition: product.before_after_image_position ?? "center" }}
           />
         </Reveal>
       )}

@@ -1,18 +1,19 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import { getGsap, prefersReducedMotion } from "@/lib/animation/gsap";
 
 interface RevealProps {
   children: ReactNode;
   className?: string;
+  style?: CSSProperties;
   /** Stagger child elements (direct children of the wrapper) instead of animating as one block. */
   stagger?: boolean;
   y?: number;
   delay?: number;
 }
 
-export function Reveal({ children, className, stagger = false, y = 24, delay = 0 }: RevealProps) {
+export function Reveal({ children, className, style, stagger = false, y = 24, delay = 0 }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -48,7 +49,7 @@ export function Reveal({ children, className, stagger = false, y = 24, delay = 0
   }, [stagger, y, delay]);
 
   return (
-    <div ref={ref} className={className}>
+    <div ref={ref} className={className} style={style}>
       {children}
     </div>
   );

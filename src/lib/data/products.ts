@@ -48,6 +48,8 @@ export interface ProductDetail extends ProductListItem {
   benefits: string | null;
   how_to_use: string | null;
   before_after_image_url: string | null;
+  before_after_image_height: number;
+  before_after_image_position: string;
   seo_title: string | null;
   seo_description: string | null;
   category_id: string | null;
@@ -238,7 +240,7 @@ export async function getProductBySlug(
     return supabase
       .from("products")
       .select(
-        `id, name, slug, description, benefits, how_to_use, before_after_image_url, ${withNewColumns ? "hover_image_url, sale_price, delivery_charge, free_delivery_min_price, free_home_delivery, variant_option_label, " : ""}base_price, seo_title, seo_description, category_id, category:categories(name, slug), product_images(id, url, alt_text, sort_order), product_variants(id, name, sku, price, stock_quantity, image_url${withNewColumns ? ", is_default_variant" : ""})`
+        `id, name, slug, description, benefits, how_to_use, before_after_image_url, before_after_image_height, before_after_image_position, ${withNewColumns ? "hover_image_url, sale_price, delivery_charge, free_delivery_min_price, free_home_delivery, variant_option_label, " : ""}base_price, seo_title, seo_description, category_id, category:categories(name, slug), product_images(id, url, alt_text, sort_order), product_variants(id, name, sku, price, stock_quantity, image_url${withNewColumns ? ", is_default_variant" : ""})`
       )
       .eq("slug", slug)
       .eq("is_active", true)
