@@ -163,6 +163,12 @@ export default async function Home() {
               standard. Every product we make is cold-pressed, slow-extracted, and free from
               synthetic additives, so nothing comes between you and nature.
             </Text>
+            <Link
+              href="/shop"
+              className="mt-2 inline-flex items-center gap-2 rounded-full bg-charcoal-900 px-8 py-3.5 text-sm font-semibold tracking-wide text-cream-50 transition hover:bg-sage-700"
+            >
+              Shop Now
+            </Link>
           </div>
           <div className="flex aspect-square items-center justify-center rounded-[2rem] bg-gradient-to-br from-sage-100 via-cream-100 to-beige-100">
             <Image src="/logo-mark.png" alt="Atom Pure" width={160} height={160} className="h-40 w-40 object-contain" />
