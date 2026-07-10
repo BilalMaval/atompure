@@ -47,14 +47,9 @@ export function ProductGallery({
 
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
-      {/* Main image */}
-      <div className="relative flex-1">
-        {badge && <div className="absolute left-3 top-3 z-10">{badge}</div>}
-        <ZoomImage src={active.url} alt={active.alt_text ?? productName} />
-      </div>
-      {/* Thumbnails — horizontal strip below on mobile, vertical sidebar on sm+ */}
+      {/* Thumbnails — wrapping grid below on mobile, vertical sidebar on LEFT on sm+ */}
       {displayImages.length > 1 && (
-        <div className="flex flex-row gap-2 overflow-x-auto pb-1 sm:flex-col sm:overflow-x-visible sm:pb-0">
+        <div className="order-2 flex flex-row flex-wrap gap-2 sm:order-1 sm:flex-col sm:flex-nowrap">
           {displayImages.map((img, index) => (
             <button
               key={img.id}
@@ -77,6 +72,11 @@ export function ProductGallery({
           ))}
         </div>
       )}
+      {/* Main image */}
+      <div className="relative order-1 flex-1 sm:order-2">
+        {badge && <div className="absolute left-3 top-3 z-10">{badge}</div>}
+        <ZoomImage src={active.url} alt={active.alt_text ?? productName} />
+      </div>
     </div>
   );
 }
