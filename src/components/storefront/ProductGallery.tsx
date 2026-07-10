@@ -46,9 +46,15 @@ export function ProductGallery({
   }
 
   return (
-    <div className="flex gap-4">
+    <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
+      {/* Main image */}
+      <div className="relative flex-1">
+        {badge && <div className="absolute left-3 top-3 z-10">{badge}</div>}
+        <ZoomImage src={active.url} alt={active.alt_text ?? productName} />
+      </div>
+      {/* Thumbnails — horizontal strip below on mobile, vertical sidebar on sm+ */}
       {displayImages.length > 1 && (
-        <div className="flex flex-shrink-0 flex-col gap-3">
+        <div className="flex flex-row gap-2 overflow-x-auto pb-1 sm:flex-col sm:overflow-x-visible sm:pb-0">
           {displayImages.map((img, index) => (
             <button
               key={img.id}
@@ -56,7 +62,7 @@ export function ProductGallery({
               onClick={() => setActiveIndex(index)}
               aria-label={`View image ${index + 1}`}
               className={clsx(
-                "relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-lg bg-beige-100 ring-2 transition-colors",
+                "relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg bg-beige-100 ring-2 transition-colors sm:h-20 sm:w-20",
                 index === activeIndex ? "ring-sage-600" : "ring-transparent"
               )}
             >
@@ -64,17 +70,13 @@ export function ProductGallery({
                 src={img.url}
                 alt={img.alt_text ?? productName}
                 fill
-                sizes="96px"
+                sizes="80px"
                 className="object-cover"
               />
             </button>
           ))}
         </div>
       )}
-      <div className="relative flex-1">
-        {badge && <div className="absolute left-3 top-3 z-10">{badge}</div>}
-        <ZoomImage src={active.url} alt={active.alt_text ?? productName} />
-      </div>
     </div>
   );
 }

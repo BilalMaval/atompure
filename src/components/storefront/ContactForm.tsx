@@ -61,7 +61,7 @@ export function ContactForm() {
         <textarea
           placeholder="How can we help?"
           {...register("message")}
-          className="min-h-32 rounded-lg border border-beige-300 bg-cream-50 p-4 text-sm"
+          className="w-full min-h-32 rounded-lg border border-beige-300 bg-cream-50 p-4 text-sm"
         />
         {errors.message && <p className="mt-1 text-xs text-red-600">{errors.message.message}</p>}
       </div>

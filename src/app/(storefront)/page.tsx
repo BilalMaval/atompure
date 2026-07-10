@@ -61,15 +61,15 @@ export default async function Home() {
       </div>
 
       {/* Short statement band */}
-      <Container className="py-20">
+      <Container className="py-12 sm:py-20">
         <Reveal stagger className="flex flex-col items-center gap-2 text-center">
-          <Heading level={2} className="font-display text-[clamp(2.5rem,8vw,95px)] leading-tight">
+          <Heading level={2} className="font-display text-[clamp(1.8rem,6vw,95px)] leading-tight">
             We started to make life pure.
           </Heading>
-          <Heading level={2} className="font-display text-[clamp(2.5rem,8vw,95px)] leading-tight text-sage-700">
+          <Heading level={2} className="font-display text-[clamp(1.8rem,6vw,95px)] leading-tight text-sage-700">
             Atom Pure Life.
           </Heading>
-          <Heading level={2} className="font-display text-[clamp(2.5rem,8vw,95px)] leading-tight">
+          <Heading level={2} className="font-display text-[clamp(1.8rem,6vw,95px)] leading-tight">
             100% Pure — 0% Chemicals.
           </Heading>
         </Reveal>
@@ -149,23 +149,23 @@ export default async function Home() {
       </Container>
 
       {/* Our story */}
-      <Container className="py-20">
-        <Reveal className="grid items-center gap-10 lg:grid-cols-2">
-          <div className="flex flex-col items-center gap-6 text-center">
-            <h2 className="font-display text-[57.6px] font-light leading-[1.05] text-charcoal-900 sm:text-[72px]">
+      <Container className="py-12 sm:py-20">
+        <Reveal className="grid items-center gap-8 lg:grid-cols-2 lg:gap-10">
+          <div className="flex flex-col items-center gap-4 text-center sm:gap-6">
+            <h2 className="font-display text-[40px] font-light leading-[1.05] text-charcoal-900 sm:text-[57.6px] lg:text-[72px]">
               Why Atom Pure.
             </h2>
-            <p className="whitespace-nowrap font-display text-[23.4px] font-light leading-snug text-charcoal-700 sm:text-[29.3px]">
+            <p className="font-display text-[18px] font-light leading-snug text-charcoal-700 sm:text-[23.4px] sm:whitespace-nowrap lg:text-[29.3px]">
               We started this journey to make life 100% pure.
             </p>
-            <Text className="max-w-md text-[21.6px] leading-relaxed text-charcoal-600">
+            <Text className="max-w-md text-[16px] leading-relaxed text-charcoal-600 sm:text-[21.6px]">
               At Atom Pure, purity isn&apos;t a marketing word — it&apos;s our manufacturing
               standard. Every product we make is cold-pressed, slow-extracted, and free from
               synthetic additives, so nothing comes between you and nature.
             </Text>
           </div>
-          <div className="flex aspect-[4/3] items-center justify-center rounded-[2rem] bg-gradient-to-br from-sage-100 via-cream-100 to-beige-100">
-            <Image src="/logo-mark.png" alt="Atom Pure" width={160} height={160} className="h-40 w-40 object-contain" />
+          <div className="flex aspect-[3/2] items-center justify-center rounded-[1.5rem] bg-gradient-to-br from-sage-100 via-cream-100 to-beige-100 sm:aspect-[4/3] sm:rounded-[2rem]">
+            <Image src="/logo-mark.png" alt="Atom Pure" width={160} height={160} className="h-28 w-28 object-contain sm:h-40 sm:w-40" />
           </div>
         </Reveal>
       </Container>

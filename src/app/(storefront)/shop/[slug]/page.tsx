@@ -100,7 +100,7 @@ export default async function ProductPage({
   };
 
   return (
-    <Container className="py-16">
+    <Container className="py-8 sm:py-16">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
