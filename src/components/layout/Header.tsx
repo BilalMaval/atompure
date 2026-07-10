@@ -48,21 +48,21 @@ export function Header() {
               : "border-b border-charcoal-800 bg-charcoal-900"
         )}
       >
-        <Container className="grid h-14 grid-cols-3 items-center gap-4">
+        <Container className="flex h-14 items-center gap-4">
           <Link
             href="/"
             className={clsx(
-              "justify-self-start transition-colors",
+              "flex-shrink-0 transition-colors",
               isScrolled ? "text-charcoal-900" : "text-cream-50"
             )}
           >
             <Logo invert={!isScrolled} small />
           </Link>
 
-          {/* Desktop nav */}
+          {/* Desktop nav — centered */}
           <nav
             className={clsx(
-              "hidden justify-self-center gap-8 text-sm transition-colors sm:flex",
+              "hidden flex-1 justify-center gap-8 text-sm transition-colors sm:flex",
               isScrolled ? "text-charcoal-600" : "text-cream-100"
             )}
           >
@@ -73,7 +73,10 @@ export function Header() {
             ))}
           </nav>
 
-          <div className="flex items-center justify-end gap-1 justify-self-end">
+          {/* Spacer on mobile so icons stay right */}
+          <div className="flex-1 sm:hidden" />
+
+          <div className="flex items-center gap-1">
             <div className="hidden lg:block">
               <SearchBar />
             </div>
