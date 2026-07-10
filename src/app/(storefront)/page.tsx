@@ -164,7 +164,7 @@ export default async function Home() {
               synthetic additives, so nothing comes between you and nature.
             </Text>
           </div>
-          <div className="flex aspect-[4/3] items-center justify-center rounded-[2rem] bg-gradient-to-br from-sage-100 via-cream-100 to-beige-100">
+          <div className="flex aspect-[5/3] items-center justify-center rounded-[2rem] bg-gradient-to-br from-sage-100 via-cream-100 to-beige-100">
             <Image src="/logo-mark.png" alt="Atom Pure" width={160} height={160} className="h-40 w-40 object-contain" />
           </div>
         </Reveal>
