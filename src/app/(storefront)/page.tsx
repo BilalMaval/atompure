@@ -102,7 +102,7 @@ export default async function Home() {
       </div>
 
       {/* Full-width banner */}
-      <Reveal className="relative flex h-[420px] w-full items-center justify-center overflow-hidden bg-gradient-to-br from-sage-700 via-sage-600 to-charcoal-900">
+      <Reveal className="relative mt-1 flex h-[420px] w-full items-center justify-center overflow-hidden bg-gradient-to-br from-sage-700 via-sage-600 to-charcoal-900">
         <Image
           src="/logo-mark.png"
           alt=""
