@@ -140,7 +140,7 @@ export default async function Home() {
       </Container>
 
       {/* Homepage banners, admin-editable from /admin/homepage-banners */}
-      <Container className="flex flex-col gap-2 pt-4 pb-12">
+      <Container className="flex flex-col gap-2 pt-2 pb-12">
         {banners.map((banner) => (
           <Reveal key={banner.id} className="overflow-hidden rounded-2xl">
             <HomepageBanner banner={banner} />
