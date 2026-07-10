@@ -7,7 +7,7 @@ import {
 } from "@/lib/data/products";
 import { Container } from "@/components/ui/Container";
 import { Heading, Text } from "@/components/ui/Typography";
-import { Breadcrumbs, breadcrumbJsonLd } from "@/components/storefront/Breadcrumbs";
+import { breadcrumbJsonLd } from "@/components/storefront/Breadcrumbs";
 import { ProductCard } from "@/components/storefront/ProductCard";
 import { Reveal } from "@/components/animation/Reveal";
 import { ReviewForm } from "@/components/storefront/ReviewForm";
