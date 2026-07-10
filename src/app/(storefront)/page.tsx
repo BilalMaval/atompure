@@ -61,7 +61,7 @@ export default async function Home() {
       </div>
 
       {/* Short statement band */}
-      <Container className="pt-20 pb-10">
+      <Container className="py-20">
         <Reveal stagger className="flex flex-col items-center gap-2 text-center">
           <Heading level={2} className="font-display text-[clamp(2.5rem,8vw,95px)] leading-tight">
             We started to make life pure.
@@ -76,7 +76,7 @@ export default async function Home() {
       </Container>
 
       {/* Products, exactly 3 in a single row */}
-      <Container className="pt-10 pb-12">
+      <Container className="py-12">
         <Reveal className="mb-10 flex items-end justify-between">
           <Heading level={2} className="font-display text-[clamp(2.5rem,8vw,95px)] !font-light leading-tight">
             The Atombook
