@@ -100,7 +100,7 @@ export default async function ProductPage({
   };
 
   return (
-    <Container className="py-8 sm:py-16">
+    <Container className="pt-4 pb-8 sm:pt-8 sm:pb-16">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
@@ -111,8 +111,6 @@ export default async function ProductPage({
           __html: JSON.stringify(breadcrumbJsonLd(breadcrumbItems, SITE_URL)),
         }}
       />
-
-      <Breadcrumbs items={breadcrumbItems} />
 
       <div className="grid gap-10 lg:grid-cols-[4fr_3fr]">
         <ProductView
