@@ -60,7 +60,7 @@ export default async function AccountOrdersPage() {
                   );
                 })}
               </ul>
-              <div className="flex items-center justify-between border-t border-beige-200 pt-4">
+              <div className="flex flex-wrap items-center justify-between gap-3 border-t border-beige-200 pt-4">
                 <Text className="font-medium text-charcoal-800">{formatPrice(order.total)}</Text>
                 <div className="flex items-center gap-4">
                   <Link
