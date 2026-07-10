@@ -76,7 +76,7 @@ export default async function Home() {
       </Container>
 
       {/* Products, exactly 3 in a single row */}
-      <Container className="py-12">
+      <Container className="pt-12 pb-0">
         <Reveal className="mb-10 flex items-end justify-between">
           <Heading level={2} className="font-display text-[clamp(2.5rem,8vw,95px)] !font-light leading-tight">
             The Atombook
