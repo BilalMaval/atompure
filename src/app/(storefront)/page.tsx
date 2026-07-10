@@ -172,7 +172,7 @@ export default async function Home() {
 
       {/* Testimonials */}
       <div className="bg-cream-100 pt-20 pb-10">
-        <Reveal className="mb-6 px-4 text-center">
+        <Reveal className="mb-10 px-4 text-center">
           <Heading level={2} className="font-display text-[clamp(2.5rem,8vw,95px)] leading-tight">
             What Customers Are Saying
           </Heading>
