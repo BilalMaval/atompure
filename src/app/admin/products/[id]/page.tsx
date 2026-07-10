@@ -130,8 +130,6 @@ export default async function EditProductPage({ params }: { params: { id: string
         <BeforeAfterImageManager
           productId={product.id}
           imageUrl={product.before_after_image_url ?? null}
-          initialHeight={(product as { before_after_image_height?: number }).before_after_image_height ?? 420}
-          initialPosition={(product as { before_after_image_position?: string }).before_after_image_position ?? "center"}
         />
       </div>
     </div>
