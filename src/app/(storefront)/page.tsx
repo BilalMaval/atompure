@@ -182,7 +182,7 @@ export default async function Home() {
 
       {/* Real results, admin-editable from /admin/results-gallery */}
       {resultsGallery.length > 0 && (
-        <div className="bg-cream-100 pt-10 pb-20">
+        <div className="bg-cream-100 pt-4 pb-20">
           <ResultsGallery images={resultsGallery} />
         </div>
       )}
